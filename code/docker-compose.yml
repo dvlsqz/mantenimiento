@@ -1,0 +1,41 @@
+version: '3.7'
+services: 
+ mantenimiento-db:
+  image: mysql:5.7
+  environment:
+   MYSQL_ROOT_PASSWORD: Igss.2021
+   MYSQL_DATABASE: dbmantenimiento
+   MYSQL_USER: usr_laravel
+   MYSQL_PASSWORD: Usr.igss.2021
+  ports:
+   - 33069:3306
+  volumes: 
+   - ./database/schemas/:/var/lib/mysql
+  networks: 
+   laravel_prod_net:
+    ipv4_address: 171.29.100.8
+ mantenimiento-dev:
+  build:
+   context: ./
+   dockerfile: Dockerfile 
+  ports: 
+   - 8500:80
+  volumes: 
+   - ./code-dev:/var/www
+   - ./code-dev/public:/var/www/html
+  networks: 
+   laravel_prod_net:
+    ipv4_address: 171.29.100.9
+  depends_on: 
+   - mantenimiento-db
+volumes: 
+ code-dev:
+ database:
+networks: 
+ laravel_prod_net:
+  driver: bridge
+  ipam: 
+   driver: default
+   config: 
+    - 
+     subnet: 171.29.100.0/24 
